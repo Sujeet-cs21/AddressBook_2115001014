@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryLayer", "Reposito
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModelLayer", "ModelLayer\ModelLayer.csproj", "{A0CACFFA-75CB-4887-AF42-ECD64F51F026}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Validation", "Validation\Validation.csproj", "{DE902BBF-0BD1-4B9F-A803-8025FA230D58}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mapping", "Mapping\Mapping.csproj", "{DEA4E0B1-7936-4652-88D7-2208E8C92AEC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{A0CACFFA-75CB-4887-AF42-ECD64F51F026}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0CACFFA-75CB-4887-AF42-ECD64F51F026}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0CACFFA-75CB-4887-AF42-ECD64F51F026}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE902BBF-0BD1-4B9F-A803-8025FA230D58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE902BBF-0BD1-4B9F-A803-8025FA230D58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE902BBF-0BD1-4B9F-A803-8025FA230D58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE902BBF-0BD1-4B9F-A803-8025FA230D58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEA4E0B1-7936-4652-88D7-2208E8C92AEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEA4E0B1-7936-4652-88D7-2208E8C92AEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEA4E0B1-7936-4652-88D7-2208E8C92AEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEA4E0B1-7936-4652-88D7-2208E8C92AEC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

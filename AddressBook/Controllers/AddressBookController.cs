@@ -1,8 +1,6 @@
+using BusinessLayer.Interface;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using RepositoryLayer.Context;
-using RepositoryLayer.Entity;
-using System;
+using ModelLayer.DTO;
 
 namespace AddressBook.Controllers;
 
@@ -10,52 +8,47 @@ namespace AddressBook.Controllers;
 [Route("[controller]")]
 public class AddressBookController : ControllerBase
 {
-    private readonly AddressBookContext _context;
+    private readonly IAddressBookBL _addressBook;
 
-    public AddressBookController(AddressBookContext context)
+    public AddressBookController(IAddressBookBL addressBook)
     {
-        _context = context;
+        _addressBook = addressBook;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<AddressBookEntity>>> GetContacts()
+    public async Task<ActionResult<IEnumerable<AddressBookDTO>>> GetContacts()
     {
-        return await _context.Addresses.ToListAsync();
+        var contacts = await _addressBook.GetAllContacts();
+        return Ok(contacts);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<AddressBookEntity>> GetContact(int id)
+    public async Task<ActionResult<AddressBookDTO>> GetContact(int id)
     {
-        var contact = await _context.Addresses.FindAsync(id);
+        var contact = await _addressBook.GetContactById(id);
         if (contact == null) return NotFound();
-        return contact;
+        return Ok(contact);
     }
 
     [HttpPost]
-    public async Task<ActionResult<AddressBookEntity>> CreateContact(AddressBookEntity contact)
+    public async Task<ActionResult<AddressBookDTO>> CreateContact(AddressBookDTO contact)
     {
-        _context.Addresses.Add(contact);
-        await _context.SaveChangesAsync();
-        return CreatedAtAction(nameof(GetContact), new { id = contact.Id }, contact);
+        var newContact = await _addressBook.CreateContact(contact);
+        return CreatedAtAction(nameof(GetContact), newContact);
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> UpdateContact(int id, AddressBookEntity contact)
+    public async Task<IActionResult> UpdateContact(int id, AddressBookDTO contact)
     {
-        if (id != contact.Id) return BadRequest();
-        _context.Entry(contact).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
+        if (id <= 0) return BadRequest("Invalid contact ID");
+        await _addressBook.UpdateContact(id, contact);
         return NoContent();
     }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteContact(int id)
     {
-        var contact = await _context.Addresses.FindAsync(id);
-        if (contact == null) return NotFound();
-
-        _context.Addresses.Remove(contact);
-        await _context.SaveChangesAsync();
+        await _addressBook.DeleteContact(id);
         return NoContent();
     }
 

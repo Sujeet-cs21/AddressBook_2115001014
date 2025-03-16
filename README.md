@@ -20,3 +20,13 @@
         -Handle CRUD operations in business logic
     -Injected Service Layer into Controller using Dependency Injection
 
+## Section 3
+### UC1
+    -Created User Model & DTO
+    -Implement Password Hashing (Salting)
+    -Generated JWT Token on successful login
+    -Stored User Data in MS SQL Database
+    -Endpoints:
+        -POST /api/auth/register
+        -POST /api/auth/login
+

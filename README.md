@@ -39,3 +39,5 @@
 ## Section 4
 ### UC1
     -Integrated Redis for Caching
+### UC2
+    -Integrated RabbitMQ for Event-Driven Messaging

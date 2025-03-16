@@ -32,6 +32,10 @@ builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddSingleton<RedisConfig>();
 builder.Services.AddScoped<ICacheService, CacheService>();
 
+// Add RabbitMQ
+builder.Services.AddSingleton<IMessageQueueService, RabbitMQService>();
+
+
 //Database Connection
 builder.Services.AddDbContext<AddressBookContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection")));

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using ModelLayer.DTO;
 using RepositoryLayer.Context;
 using RepositoryLayer.Entity;
+using System.Text.Json;
 
 namespace BusinessLayer.Service
 {
@@ -11,17 +12,30 @@ namespace BusinessLayer.Service
     {
         private readonly AddressBookContext _context;
         private readonly IMapper _mapper;
+        private readonly ICacheService _cacheService;
+        private const string CacheKey = "AddressBookEntries";
 
-        public AddressBookBL(AddressBookContext context, IMapper mapper)
+        public AddressBookBL(AddressBookContext context, IMapper mapper, ICacheService cacheService)
         {
             _context = context;
             _mapper = mapper;
+            _cacheService = cacheService;
         }
 
         public async Task<IEnumerable<AddressBookDTO>> GetAllContacts()
         {
+            var cachedData = await _cacheService.GetCachedData(CacheKey);
+            if (!string.IsNullOrEmpty(cachedData))
+            {
+                return JsonSerializer.Deserialize<List<AddressBookDTO>>(cachedData);
+            }
+
             var contacts = await _context.Addresses.ToListAsync();
-            return _mapper.Map<List<AddressBookDTO>>(contacts);
+            var mappedContacts = _mapper.Map<List<AddressBookDTO>>(contacts);
+
+            await _cacheService.SetCachedData(CacheKey, JsonSerializer.Serialize(mappedContacts));
+
+            return mappedContacts;
         }
 
         public async Task<AddressBookDTO> GetContactById(int id)
@@ -35,6 +49,9 @@ namespace BusinessLayer.Service
             var entity = _mapper.Map<AddressBookEntity>(contact);
             _context.Addresses.Add(entity);
             await _context.SaveChangesAsync();
+
+            await _cacheService.RemoveCachedData(CacheKey); // Invalidate cache
+
             return _mapper.Map<AddressBookDTO>(entity);
         }
 
@@ -44,6 +61,8 @@ namespace BusinessLayer.Service
             entity.Id = id;
             _context.Entry(entity).State = EntityState.Modified;
             await _context.SaveChangesAsync();
+
+            await _cacheService.RemoveCachedData(CacheKey); // Invalidate cache
         }
 
         public async Task DeleteContact(int id)
@@ -53,6 +72,8 @@ namespace BusinessLayer.Service
             {
                 _context.Addresses.Remove(contact);
                 await _context.SaveChangesAsync();
+
+                await _cacheService.RemoveCachedData(CacheKey); // Invalidate cache
             }
         }
     }

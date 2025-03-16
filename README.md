@@ -36,4 +36,6 @@
     -Endpoints:
         -POST /api/auth/forgot-password
         -POST /api/auth/reset-password
-
+## Section 4
+### UC1
+    -Integrated Redis for Caching

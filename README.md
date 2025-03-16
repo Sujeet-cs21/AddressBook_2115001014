@@ -29,4 +29,11 @@
     -Endpoints:
         -POST /api/auth/register
         -POST /api/auth/login
+### UC2
+    -Generated Reset Token
+    -Sent Password Reset Email (SMTP)
+    -Verify token & allow password reset
+    -Endpoints:
+        -POST /api/auth/forgot-password
+        -POST /api/auth/reset-password
 

@@ -1,4 +1,5 @@
 using AutoMapper;
+using BusinessLayer.Cofiguration;
 using BusinessLayer.Interface;
 using BusinessLayer.Service;
 using FluentValidation;
@@ -9,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using RepositoryLayer.Context;
 using RepositoryLayer.Interface;
 using RepositoryLayer.Service;
+using StackExchange.Redis;
 using System.Text;
 using Validation.Validator;
 
@@ -25,6 +27,10 @@ builder.Services.AddScoped<IUserRL, UserRL>();
 builder.Services.AddScoped<IUserBL, UserBL>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+
+// Add Redis Caching
+builder.Services.AddSingleton<RedisConfig>();
+builder.Services.AddScoped<ICacheService, CacheService>();
 
 //Database Connection
 builder.Services.AddDbContext<AddressBookContext>(options =>

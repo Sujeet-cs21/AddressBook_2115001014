@@ -6,5 +6,6 @@ namespace RepositoryLayer.Interface
     {
         Task<UserEntity> GetUserByEmail(string email);
         Task CreateUser(UserEntity user);
+        Task UpdatePassword(UserEntity user); 
     }
 }

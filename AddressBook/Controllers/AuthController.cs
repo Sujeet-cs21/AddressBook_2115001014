@@ -28,5 +28,19 @@ namespace AddressBook.Controllers
             var token = await _userBL.Login(userDto);
             return Ok(new { Message = "Login Successful",Token = token });
         }
+
+        [HttpPost("forgot-password")]
+        public async Task<ActionResult<string>> ForgotPassword(ForgotPasswordDTO forgotPasswordDto)
+        {
+            var result = await _userBL.ForgotPassword(forgotPasswordDto);
+            return Ok(new { Message = result });
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<ActionResult<string>> ResetPassword(ResetPasswordDTO resetPasswordDto)
+        {
+            var result = await _userBL.ResetPassword(resetPasswordDto);
+            return Ok(new { Message = result });
+        }
     }
 }

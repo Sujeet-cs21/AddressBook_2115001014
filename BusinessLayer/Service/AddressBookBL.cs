@@ -13,13 +13,15 @@ namespace BusinessLayer.Service
         private readonly AddressBookContext _context;
         private readonly IMapper _mapper;
         private readonly ICacheService _cacheService;
+        private readonly IMessageQueueService _messagePublisher; // RabbitMQ Publisher
         private const string CacheKey = "AddressBookEntries";
 
-        public AddressBookBL(AddressBookContext context, IMapper mapper, ICacheService cacheService)
+        public AddressBookBL(AddressBookContext context, IMapper mapper, ICacheService cacheService, IMessageQueueService messagePublisher)
         {
             _context = context;
             _mapper = mapper;
             _cacheService = cacheService;
+            _messagePublisher = messagePublisher;
         }
 
         public async Task<IEnumerable<AddressBookDTO>> GetAllContacts()
@@ -52,6 +54,10 @@ namespace BusinessLayer.Service
 
             await _cacheService.RemoveCachedData(CacheKey); // Invalidate cache
 
+            // Publish event to RabbitMQ
+            var message = JsonSerializer.Serialize(new { Id = entity.Id, Name = entity.Name, Email = entity.Email });
+            await _messagePublisher.PublishMessage("ContactCreated", message);
+
             return _mapper.Map<AddressBookDTO>(entity);
         }
 
@@ -74,6 +80,10 @@ namespace BusinessLayer.Service
                 await _context.SaveChangesAsync();
 
                 await _cacheService.RemoveCachedData(CacheKey); // Invalidate cache
+
+                // Publish event to RabbitMQ
+                var message = JsonSerializer.Serialize(new { Id = contact.Id });
+                await _messagePublisher.PublishMessage("ContactDeleted", message);
             }
         }
     }
